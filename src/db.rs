@@ -14,10 +14,7 @@
 
 use crate::config::StorageConfig;
 use crate::util::{check_key, check_region, check_value, full_to_compact, kms_client};
-use cita_cloud_proto::{
-    blockchain::{Block, CompactBlock, RawTransaction, RawTransactions},
-    storage::Regions,
-};
+use cita_cloud_proto::blockchain::{Block, CompactBlock, RawTransaction, RawTransactions};
 use cloud_util::common::get_tx_hash;
 use cloud_util::crypto::get_block_hash;
 use prost::Message;
@@ -30,7 +27,7 @@ pub struct DB {
 }
 
 impl DB {
-    pub fn new(db_path: &str, config: &StorageConfig) -> Self {
+    pub fn new(db_path: &str, _config: &StorageConfig) -> Self {
         let root_path = Path::new(".");
         let path = root_path.join(db_path);
 
@@ -53,16 +50,18 @@ impl DB {
         }
 
         if let Ok(tree) = self.db.open_tree(&format!("{}", region)) {
-            tree.insert(key.clone(), value).map_err(|e| {
-                log::warn!(
-                    "store region({}), key({}) error: {:?}",
-                    region,
-                    hex::encode(&key),
-                    e
-                );
-                StatusCode::StoreError
-            });
-            Ok(())
+            match tree.insert(key.clone(), value) {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    log::warn!(
+                        "store region({}), key({}) error: {:?}",
+                        region,
+                        hex::encode(&key),
+                        e
+                    );
+                    Err(StatusCode::StoreError)
+                }
+            }
         } else {
             log::warn!("store: bad region({})", region);
             Err(StatusCode::BadRegion)
