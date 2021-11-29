@@ -1,5 +1,5 @@
-# storage rocksdb
+# storage sled
 ## build docker image
 ```
-docker build -t citacloud/storage_rocksdb .
+docker build -t citacloud/storage_sled .
 ```
