@@ -24,7 +24,7 @@ const GIT_VERSION: &str = git_version!(
     args = ["--tags", "--always", "--dirty=-modified"],
     fallback = "unknown"
 );
-const GIT_HOMEPAGE: &str = "https://github.com/cita-cloud/storage_rocksdb";
+const GIT_HOMEPAGE: &str = "https://github.com/cita-cloud/storage_sled";
 
 /// network service
 #[derive(Clap)]

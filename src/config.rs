@@ -52,7 +52,7 @@ impl Default for StorageConfig {
 
 impl StorageConfig {
     pub fn new(config_str: &str) -> Self {
-        read_toml(config_str, "storage_rocksdb")
+        read_toml(config_str, "storage_sled")
     }
 }
 
